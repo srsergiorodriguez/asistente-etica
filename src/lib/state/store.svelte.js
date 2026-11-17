@@ -15,6 +15,7 @@ export const store = $state({
     investigadorPrincipal: "", // Será el nombre del estudiante si esEstudiante es true
     datosContacto: "",
     nombreTutor: "", // Nueva variable para el aval
+    programa: "", // Programa si es un estudiante
     
     accionObjeto: "",
     medio: "",
@@ -63,26 +64,37 @@ export const flujo = {
   },
 
   get documentosRequeridos() {
-    let docs = [{ id: 'planteamiento', titulo: 'Planteamiento general' }];
-    docs.push({ id: 'platypus', titulo: 'Borrador Platypus' });
-    
-    // Inyecciones condicionales en el Stack Visual
-    if (store.diagnostico.esEstudiante) {
-      docs.push({ id: 'aval', titulo: 'Aval de tutor o coordinador' });
-    }
+    // 1. Documentos base (siempre presentes)
+    let docs = [
+      { id: 'planteamiento', titulo: 'Planteamiento' },
+      { id: 'platypus', titulo: 'Asistente Platypus' }
+    ];
+
+    // 2. Anexos de trabajo de campo con humanos
     if (store.diagnostico.usaHumanos) {
       docs.push({ id: 'consentimiento', titulo: 'Consentimiento informado' });
     }
+    // CAMBIO: Se usa la variable correcta del store
     if (store.diagnostico.usaMenores) {
-      docs.push({ id: 'asentimiento', titulo: 'Asentimiento informado' });
+      docs.push({ id: 'consentimientoPadres', titulo: 'Consentimiento para padres' });
+      docs.push({ id: 'asentimiento', titulo: 'Asentimiento informado (Menor)' });
     }
+
+    // 3. Anexos de recolección y privacidad
     if (store.diagnostico.recolectaDatosPersonales) {
       docs.push({ id: 'politica', titulo: 'Política de datos' });
     }
+
+    // 4. Anexos de material y archivo
     if (store.diagnostico.usaMaterialArchivo) {
-      docs.push({ id: 'derechosAutor', titulo: 'Derechos de autor y archivo' });
+      docs.push({ id: 'derechosAutor', titulo: 'Derechos de autor' });
     }
-    
+
+    // 5. El aval va estrictamente al final: el tutor aprueba todo lo anterior
+    if (store.diagnostico.esEstudiante) {
+      docs.push({ id: 'aval', titulo: 'Aval de tutor o coordinador' });
+    }
+
     return docs;
   },
 

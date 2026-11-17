@@ -1,6 +1,7 @@
 <!-- src/lib/components/wizard/AvalProfesor.svelte -->
 <script>
-  import { store } from '$state/store.svelte.js';
+  // Añadimos 'flujo' para poder extraer el nivel de riesgo calculado dinámicamente
+  import { store, flujo } from '$state/store.svelte.js';
   import { copiarTexto, exportarWord, exportarPDF } from '$utils/exportador.js';
   
   import DocumentToolbar from '$components/ui/DocumentToolbar.svelte';
@@ -10,7 +11,6 @@
   }
 
   function handleWord() {
-    // Usamos el nombre del estudiante para el archivo
     const nombre = `Aval_${store.proyectoCore.investigadorPrincipal ? store.proyectoCore.investigadorPrincipal.replace(/\s+/g, '_') : 'Estudiante'}`;
     exportarWord('documento-legal-exportable-aval', nombre);
   }
@@ -23,7 +23,6 @@
 
 <div class="panel doc-layout">
   
-  <!-- Usamos el componente reutilizable desactivando la IA -->
   <DocumentToolbar 
     titulo="Aval de tutor o coordinador"
     subtitulo="Formato requerido por el comité para proyectos de investigación formativa y trabajo de grado."
@@ -39,48 +38,37 @@
   <div class="doc-container">
     <div id="documento-legal-exportable-aval" class="doc-content">
       
-      <p class="doc-center doc-bold">Universidad de los Andes - Facultad de Artes y Humanidades</p>
-      <p class="doc-title-main">Aval de tutor o coordinador de proyecto</p>
+      <!-- Título institucional en mayúsculas según el formato oficial -->
+      <p class="doc-title-main" style="text-transform: uppercase; font-size: 1.1rem; line-height: 1.4;">
+        Aval de profesor supervisor de trabajo de grado de posgrado para solicitar aval ético
+      </p>
       
       <p class="doc-text-ai doc-spacing-md">
-        Fecha: ______________________________
+        Yo, <span class="doc-bold">{store.proyectoCore.nombreTutor || '[nombre completo del supervisor(a)]'}</span>, en calidad de profesor supervisor del trabajo de grado titulado provisionalmente <span class="doc-bold">"{store.proyectoCore.titulo || '[título del trabajo de grado]'}"</span>, desarrollado por <span class="doc-bold">{store.proyectoCore.investigadorPrincipal || '[nombre completo del/de la estudiante]'}</span>, del programa <span class="doc-bold">{store.proyectoCore.programa || '[nombre del programa]'}</span>, dejo constancia de que conozco la propuesta y he acompañado su formulación y revisión inicial desde el punto de vista ético. 
       </p>
 
       <p class="doc-text-ai doc-spacing-md">
-        Señores<br>
-        <span class="doc-bold">Comité de Ética en Investigación</span><br>
-        Facultad de Artes y Humanidades<br>
-        Universidad de los Andes
-      </p>
-
-      <p class="doc-text-ai doc-spacing-md">
-        Respetados miembros del comité,
-      </p>
-
-      <p class="doc-text-ai doc-spacing-md">
-        Por medio de la presente comunicación, yo, <span class="doc-bold">{store.proyectoCore.nombreTutor || '[Nombre del profesor/tutor]'}</span>, manifiesto que obro en calidad de profesor tutor / coordinador del estudiante <span class="doc-bold">{store.proyectoCore.investigadorPrincipal || '[Nombre del estudiante]'}</span>.
-      </p>
-
-      <p class="doc-text-ai doc-spacing-md">
-        He revisado detalladamente el planteamiento, los objetivos y la arquitectura metodológica del proyecto titulado <span class="doc-bold">"{store.proyectoCore.titulo || '[Título del proyecto]'}"</span>. Certifico que he discutido a cabalidad las implicaciones y posibles riesgos éticos de esta investigación con el/la estudiante, asegurando que se han contemplado las medidas de mitigación, privacidad y contención adecuadas para el trabajo en nuestra disciplina.
+        De acuerdo con esta revisión inicial, estimamos que el nivel de riesgo ético de este trabajo de grado es: <span class="doc-bold">{flujo.nivelRiesgo.nivel || '[nivel de riesgo]'}</span>.
       </p>
 
       <p class="doc-text-ai doc-spacing-lg">
-        Por lo anterior, apruebo formalmente los instrumentos de recolección y los consentimientos informados aquí presentados, y otorgo mi aval para que el/la estudiante envíe esta solicitud para la revisión oficial de su comité.
+        Con fundamento en la revisión realizada, otorgo mi aval para que el trabajo de grado sea presentado ante el Comité de Ética de la Universidad para el otorgamiento del aval. Este aval da cuenta de la revisión y orientación realizada en mi calidad de tutor(a), pero no sustituye la evaluación ni el concepto del Comité de Ética.
       </p>
 
-      <p class="doc-text-ai doc-spacing-lg">
-        Cordialmente,
-      </p>
+      <!-- Bloque de firmas ajustado a las líneas continuas solicitadas -->
+      <div class="doc-signatures" style="margin-top: 3rem;">
+        
+        <p class="doc-sig-text" style="margin-bottom: 0;">________________________________________________</p>
+        <p class="doc-sig-text" style="margin-top: 0.2rem; margin-bottom: 2rem;">
+          Nombre del director/directora: <span class="doc-bold">{store.proyectoCore.nombreTutor || ''}</span>
+        </p>
 
-      <div class="doc-signatures">
-        <div class="doc-sig-row">
-          <div class="doc-sig-box">
-            <p class="doc-sig-line">Firma del profesor avalador</p>
-            <p class="doc-sig-text">Nombre: {store.proyectoCore.nombreTutor || '________________________'}</p>
-            <p class="doc-sig-text">Cargo / Afiliación: ________________________</p>
-          </div>
-        </div>
+        <p class="doc-sig-text" style="margin-bottom: 0;">________________________________________________</p>
+        <p class="doc-sig-text" style="margin-top: 0.2rem; margin-bottom: 2rem;">Firma</p>
+
+        <p class="doc-sig-text" style="margin-bottom: 0;">________________________________________________</p>
+        <p class="doc-sig-text" style="margin-top: 0.2rem;">Fecha</p>
+        
       </div>
       
     </div>

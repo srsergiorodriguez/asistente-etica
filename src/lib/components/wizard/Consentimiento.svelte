@@ -35,10 +35,10 @@
       REGLA VITAL: Devuelve ÚNICAMENTE un objeto JSON válido con estas 5 claves:
       {
         "justificacion": "Propósito del estudio y por qué se le invita a participar. Escribe un párrafo bien desarrollado.",
-        "procedimientos": "Qué tendrá que hacer el participante paso a paso. Describe las actividades de forma detallada y fluida.",
-        "riesgos": "Clasificación de riesgo, incomodidades posibles y qué apoyo se le brindará. Escribe un párrafo bien desarrollado.",
-        "beneficios": "Aclarar si hay remuneración y cuál es el beneficio social/académico. Escribe un párrafo claro.",
-        "manejoDatos": "Cómo se protegerá su privacidad y cuánto tiempo se guardará la información. Escribe un párrafo bien desarrollado."
+        "procedimientos": "Qué tendrá que hacer el participante paso a paso. Describe las actividades y duración.",
+        "riesgos": "Incomodidades posibles y estrategias previstas para minimizar el riesgo y brindar apoyo. Párrafo desarrollado.",
+        "beneficios": "Aclarar si hay beneficios o compensaciones económicas. Escribe un párrafo claro.",
+        "manejoDatos": "Cómo se protegerá su privacidad, quién tendrá acceso y cuánto tiempo se guardará la información."
       }`;
 
       const respuestaTexto = await generarConIA(promptSistema, promptUsuario, (textoActual) => {
@@ -63,17 +63,17 @@
   }
 
   function handleCopiar() {
-    copiarTexto('documento-legal-exportable');
+    copiarTexto('documento-legal-exportable-consentimiento');
   }
 
   function handleWord() {
     const nombre = `Consentimiento_${store.proyectoCore.titulo || 'Proyecto'}`;
-    exportarWord('documento-legal-exportable', nombre);
+    exportarWord('documento-legal-exportable-consentimiento', nombre);
   }
 
   function handlePDF() {
     const nombre = `Consentimiento_${store.proyectoCore.titulo || 'Proyecto'}`;
-    exportarPDF('documento-legal-exportable', nombre);
+    exportarPDF('documento-legal-exportable-consentimiento', nombre);
   }
 </script>
 
@@ -81,7 +81,7 @@
   
   <DocumentToolbar 
     titulo="Consentimiento informado"
-    subtitulo="Edite en su procesador de texto favorito tras exportar."
+    subtitulo="Documento general para participantes adultos."
     isAiActivated={aiState.isActivated}
     isAiReady={aiState.isReady}
     isGenerating={isGenerating}
@@ -98,29 +98,29 @@
   />
 
   <div class="doc-container">
-    <div id="documento-legal-exportable" class="doc-content">
+    <div id="documento-legal-exportable-consentimiento" class="doc-content">
       
       <p class="doc-center doc-bold">Universidad de los Andes - Facultad de Artes y Humanidades</p>
-      <p class="doc-title-main">Formato de consentimiento informado</p>
+      <p class="doc-title-main">Consentimiento informado para participación en investigación</p>
       
       <p class="doc-section-title">Título del proyecto: <span class="doc-font-normal">{store.proyectoCore.titulo || '[Título del proyecto no definido]'}</span></p>
       
       <p class="doc-section-title doc-spacing-md">Investigador responsable: <span class="doc-font-normal">{store.proyectoCore.investigadorPrincipal || '[Nombre del investigador no definido]'} {store.proyectoCore.datosContacto ? `(${store.proyectoCore.datosContacto})` : ''}</span></p>
       
-      <p class="doc-section-title">1. Justificación y objetivos:</p>
+      <p class="doc-section-title">1. Introducción y justificación:</p>
       <p class="doc-text-ai">
         {#if store.documentos.consentimiento.justificacion} {store.documentos.consentimiento.justificacion} {:else} <span class="doc-placeholder">[Haga clic en 'Autocompletar con IA' para redactar esta sección].</span> {/if}
       </p>
 
-      <p class="doc-section-title">2. Procedimientos y participación:</p>
+      <p class="doc-section-title">2. Descripción del procedimiento:</p>
       <p class="doc-text-ai">
         {#if store.documentos.consentimiento.procedimientos} {store.documentos.consentimiento.procedimientos} {:else} <span class="doc-placeholder">[Detalle aquí en qué consistirá la participación].</span> {/if}
       </p>
 
       <p class="doc-section-title">3. Riesgos, molestias y contención:</p>
       <p class="doc-text-ai">
-        De acuerdo con la Resolución 008430 de 1993 del Ministerio de Salud, esta investigación se clasifica como <span class="doc-bold">{flujo.nivelRiesgo.nivel.toLowerCase()}</span>. 
-        {#if store.documentos.consentimiento.riesgos} {store.documentos.consentimiento.riesgos} {:else} <span class="doc-placeholder">[Describa aquí los riesgos o la ausencia de los mismos].</span> {/if}
+        Esta investigación se clasifica con un nivel de <span class="doc-bold">{flujo.nivelRiesgo.nivel.toLowerCase()}</span>. 
+        {#if store.documentos.consentimiento.riesgos} {store.documentos.consentimiento.riesgos} {:else} <span class="doc-placeholder">[Describa aquí los riesgos, molestias y el apoyo brindado].</span> {/if}
       </p>
 
       <p class="doc-section-title">4. Beneficios esperados:</p>
@@ -128,49 +128,80 @@
         {#if store.documentos.consentimiento.beneficios} {store.documentos.consentimiento.beneficios} {:else} <span class="doc-placeholder">[Aclare si existe remuneración y el beneficio de la investigación].</span> {/if}
       </p>
 
+      <p class="doc-section-title">5. Confidencialidad y manejo de datos:</p>
+      <p class="doc-text-ai">
+        {#if store.documentos.consentimiento.manejoDatos} {store.documentos.consentimiento.manejoDatos} {:else} <span class="doc-placeholder">[Describa aquí los protocolos de privacidad y retención].</span> {/if}
+      </p>
+
       {#if store.diagnostico.recolectaDatosPersonales}
-        <p class="doc-section-title">5. Cláusula de tratamiento de datos personales:</p>
+        <p class="doc-section-title">6. Autorización de datos personales (Habeas Data):</p>
         <p class="doc-text-ai">
-          Al participar, usted autoriza el tratamiento de sus datos personales. {#if store.documentos.consentimiento.manejoDatos} {store.documentos.consentimiento.manejoDatos} {:else} <span class="doc-placeholder">[Describa aquí los protocolos de anonimización y retención].</span> {/if} Usted tiene el derecho legal de conocer, actualizar y solicitar el retiro o anonimización de sus datos en cualquier momento contactando al equipo investigador.
+          La Universidad de los Andes, como institución que almacena y recolecta datos personales, requiere obtener su autorización para recolectar, usar, suprimir, procesar, verificar, dar tratamiento, actualizar y disponer de los datos que han sido suministrados y que se han incorporado en las bases de datos con que cuenta la Universidad (incluyendo fotografía o producción Audiovisual, biométricos). La información será utilizada para el desarrollo de las funciones propias de la Universidad en su condición de institución de educación superior.
         </p>
-      {:else}
-        <p class="doc-section-title">5. Confidencialidad:</p>
         <p class="doc-text-ai">
-          Este proyecto no recolecta datos personales que permitan su identificación. La información recopilada será de carácter general y anónimo desde su origen.
+          De igual manera usted declara que está al tanto de los derechos que le asisten como titular de datos, especialmente los de conocer, actualizar y rectificar sus datos personales frente a la Universidad de los Andes, y los demás consagrados en el Manual de Política de Tratamiento de Datos Personales de la Universidad, así como del carácter facultativo de la respuesta a las preguntas, si se le llegasen a hacer, cuando estas versen sobre datos sensibles.
+        </p>
+        <p class="doc-text-ai">
+          Para ejercer su derecho de Habeas Data, usted puede direccionar sus peticiones al correo: habeasdata@uniandes.edu.co.
         </p>
       {/if}
 
-      <p class="doc-section-title">Participación voluntaria:</p>
+      <p class="doc-section-title">7. Voluntariedad, derecho a retirarse y contacto:</p>
       <p class="doc-text-ai">
-        Su participación es estrictamente voluntaria. Usted tiene total libertad de negarse a participar o retirar su consentimiento en cualquier etapa del estudio sin ninguna consecuencia negativa o penalidad.
+        Su participación es completamente voluntaria. Puede retirarse en cualquier momento sin que ello le afecte. Si tiene alguna duda sobre los procedimientos, riesgos o beneficios, puede contactar al equipo investigador en cualquier etapa del estudio.
       </p>
 
-      <p class="doc-section-title">Declaración de consentimiento:</p>
-      <p class="doc-text-ai doc-spacing-lg">
-        He leído y comprendido la información proporcionada. Se me han explicado los objetivos, riesgos y beneficios del proyecto y todas mis preguntas han sido respondidas. Con pleno conocimiento, autorizo mi participación en la investigación.
-      </p>
+      <p class="doc-section-title">8. Declaraciones y autorizaciones:</p>
+      <ul style="list-style: none; padding-left: 0; margin-bottom: 2rem; font-family: Arial, sans-serif; font-size: 11pt;">
+        <li style="margin-bottom: 0.8rem;">
+          He leído y comprendido la información proporcionada. Acepto participar en el estudio.<br>
+          <strong>Sí ___ No ___</strong>
+        </li>
+        <!-- Condicional global para todo lo relacionado con datos y registros -->
+        {#if store.diagnostico.recolectaDatosPersonales}
+          <li style="margin-bottom: 0.8rem;">
+            Autorizo el tratamiento de datos personales:<br>
+            <strong>Sí ___ No ___</strong>
+          </li>
+          {#if store.diagnostico.temasSensibles}
+            <li style="margin-bottom: 0.8rem;">
+              Autorizo el tratamiento de datos sensibles:<br>
+              <strong>Sí ___ No ___</strong>
+            </li>
+          {/if}
+          <li style="margin-bottom: 0.8rem;">
+            Autorizo de forma no exclusiva la utilización de mis derechos de imagen (fotografía/video) para los fines de esta investigación:<br>
+            <strong>Sí ___ No ___</strong>
+          </li>
+          <li style="margin-bottom: 0.8rem;">
+            Autorizo grabación de audio y/o video:<br>
+            <strong>Sí ___ No ___</strong>
+          </li>
+          <li style="margin-bottom: 0.8rem;">
+            Autorizo la transcripción del audio y/o video:<br>
+            <strong>Sí ___ No ___</strong>
+          </li>
+        {/if}
+      </ul>
 
       <div class="doc-signatures">
         <div class="doc-sig-row">
           <div class="doc-sig-box">
             <p class="doc-sig-line">Firma del participante:</p>
             <p class="doc-sig-text">Nombre: </p>
+            <p class="doc-sig-text">No. Documento: </p>
             <p class="doc-sig-text">Fecha: </p>
-          </div>
-          <div class="doc-sig-box">
-            <p class="doc-sig-line">Firma del investigador responsable:</p>
-            <p class="doc-sig-text">Nombre: {store.proyectoCore.investigadorPrincipal || '________________________'}</p>
           </div>
         </div>
 
         <div class="doc-sig-row">
           <div class="doc-sig-box">
             <p class="doc-sig-line">Firma testigo 1:</p>
-            <p class="doc-sig-text">Nombre y relación: </p>
+            <p class="doc-sig-text">Nombre y doc: </p>
           </div>
           <div class="doc-sig-box">
             <p class="doc-sig-line">Firma testigo 2:</p>
-            <p class="doc-sig-text">Nombre y relación: </p>
+            <p class="doc-sig-text">Nombre y doc: </p>
           </div>
         </div>
       </div>

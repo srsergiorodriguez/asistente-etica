@@ -5,6 +5,7 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [svelte()],
+  base: '/asistente-etica/',
   resolve: {
     alias: {
       // Definimos los alias apuntando a las carpetas exactas

@@ -52,13 +52,22 @@
 
     <!-- El label cambia dinámicamente según el diagnóstico -->
     <div class="input-group" style="margin-top: 1rem;">
-      <label class="input-label">{store.diagnostico.esEstudiante ? 'Nombre del estudiante (Investigador principal)' : 'Investigador principal y datos de contacto'}</label>
-      {#if !store.diagnostico.esEstudiante}
-        <div class="hint-institucional" style="margin-bottom: 0.5rem; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
-          Indique quién lidera el proyecto, sus correos institucionales, y a quién deben dirigirse los participantes.
-        </div>
-      {/if}
-      <input type="text" class="input-field" bind:value={store.proyectoCore.investigadorPrincipal} placeholder={store.diagnostico.esEstudiante ? "Ej. Nombre del estudiante" : "Ej. Prof. P. Pérez (ppp@uniandes.edu.co)"} />
+      <label class="input-label">{store.diagnostico.esEstudiante ? 'Nombre del estudiante (Investigador principal)' : 'Investigador principal'}</label>
+      <input type="text" class="input-field" bind:value={store.proyectoCore.investigadorPrincipal} placeholder={store.diagnostico.esEstudiante ? "Ej. Nombre del estudiante" : "Ej. Prof. P. Pérez"} />
+    </div>
+
+    <!-- Nuevo campo de contacto añadido -->
+    <div class="input-group" style="margin-top: 1rem;">
+      <label class="input-label">Datos de contacto para los participantes</label>
+      <div class="hint-institucional" style="margin-bottom: 0.5rem; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+        Obligatorio para el consentimiento. Indique el correo electrónico institucional y/o teléfono al que deben dirigirse los participantes si tienen dudas o desean retirarse.
+      </div>
+      <input type="text" class="input-field" bind:value={store.proyectoCore.datosContacto} placeholder="Ej. jp.perez@uniandes.edu.co / Ext. 1234" />
+    </div>
+
+    <div class="input-group" style="margin-top: 1rem;">
+      <label class="input-label">Programa académico</label>
+      <input type="text" class="input-field" bind:value={store.proyectoCore.programa} placeholder="Ej. Maestría en Humanidades Digitales" />
     </div>
 
     {#if store.diagnostico.esEstudiante}
@@ -157,7 +166,6 @@
             {#each plantillasRetencion as p} <option value={p.id}>{p.titulo}</option> {/each}
           </select>
         </div>
-        <!-- HINT ACTUALIZADO -->
         <div class="hint-institucional" style="margin-bottom: 0.5rem; padding: 0.4rem 0.8rem; font-size: 0.75rem;">
           En ciencias clínicas los datos se destruyen rápido. En humanidades, suele aplicarse el mandato del "public scholarship" (hacer público el conocimiento a largo plazo). Defina si el archivo será patrimonio o si se destruirá.
         </div>
